@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  tag: "17"
+  pullPolicy: IfNotPresent
+
+postgresUser: postgres
+postgresPassword: password
+postgresDatabase: mydb
+
+service:
+  type: ClusterIP
+  port: 5432

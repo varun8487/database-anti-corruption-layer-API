@@ -1,0 +1,5 @@
+apiVersion: v2
+name: anti-corruption-api
+description: A Helm chart for deploying the anti-corruption REST API.
+version: 0.1.0
+appVersion: "1.0"

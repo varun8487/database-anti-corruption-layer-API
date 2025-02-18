@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-scripts
+data:
+  create_db.sql: |-
+    -- Create tables for the legacy system.
+
+    -- Example table: mytable
+    CREATE TABLE IF NOT EXISTS mytable (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Example table: othertable
+    CREATE TABLE IF NOT EXISTS othertable (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  populate_db.sql: |-
+    -- Insert example data into mytable
+    INSERT INTO mytable (name) VALUES ('Alice'), ('Bob'), ('Charlie');
+
+    -- Insert example data into othertable
+    INSERT INTO othertable (name) VALUES ('Xavier'), ('Yvonne'), ('Zach'); 

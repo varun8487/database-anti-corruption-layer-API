@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anti-corruption-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: anti-corruption-api
+  template:
+    metadata:
+      labels:
+        app: anti-corruption-api
+    spec:
+      containers:
+        - name: anti-corruption-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_USER
+              value: {{ .Values.env.DB_USER | quote }}
+            - name: DB_HOST
+              value: {{ .Values.env.DB_HOST | quote }}
+            - name: DB_NAME
+              value: {{ .Values.env.DB_NAME | quote }}
+            - name: DB_PASSWORD
+              value: {{ .Values.env.DB_PASSWORD | quote }}
+            - name: DB_PORT
+              value: "{{ .Values.env.DB_PORT }}"
+            - name: QUERY_MAPPING_FILE
+              value: /config/query_mappings.yaml
+          volumeMounts:
+            - name: query-mappings-volume
+              mountPath: /config
+      volumes:
+        - name: query-mappings-volume
+          configMap:
+            name: anti-corruption-api-config

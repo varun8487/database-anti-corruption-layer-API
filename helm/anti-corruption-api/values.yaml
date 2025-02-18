@@ -1,0 +1,34 @@
+replicaCount: 1
+
+image:
+  # repository: localhost:5000/anti-corruption-api
+  repository: varun8487/test
+  tag: v1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+config:
+  # This is the content of the query mappings YAML.
+  queryMappings: |
+    - api_endpoint: /myapi
+      columns:
+        id: myapi_id
+        name: myapi_name
+        created_at: myapi_created_at
+      query: SELECT * FROM mytable;
+    - api_endpoint: /myapi2
+      columns:
+        id: myapi2_id
+        name: myapi2_name
+        created_at: myapi2_created_at
+      query: SELECT id, name, created_at FROM othertable;
+
+env:
+  DB_USER: postgres
+  DB_HOST: postgres-service
+  DB_NAME: mydb
+  DB_PASSWORD: password
+  DB_PORT: 5432

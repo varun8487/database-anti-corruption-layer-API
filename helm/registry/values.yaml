@@ -1,0 +1,21 @@
+# Default values for registry
+replicaCount: 1
+
+image:
+  repository: registry
+  tag: "2"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5000
+
+persistence:
+  enabled: true
+  storageClass: ""
+  size: 10Gi
+
+# Additional registry configurations can be added here 
+
+nameOverride: ""
+fullnameOverride: "" 

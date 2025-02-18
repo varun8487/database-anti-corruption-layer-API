@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anti-corruption-api-config
+data:
+  query_mappings.yaml: |-
+{{ .Values.config.queryMappings | indent 4 }}
