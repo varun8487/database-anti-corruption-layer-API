@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  registry:
+    image: registry:2
+    ports:
+      - "5000:5000"  # Accessible via localhost:5000
+    restart: always
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydb
+    ports:
+      - "5432:5432"  # Accessible via localhost:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  anti-corruption-api:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    environment:
+      - DB_USER=postgres
+      - DB_HOST=postgres  # This refers to the postgres service name
+      - DB_NAME=mydb
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - QUERY_MAPPING_FILE=/app/query_mappings.yaml
+    ports:
+      - "3000:3000"  # Accessible via localhost:3000
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:    # Define a custom network for all services
+    driver: bridge
