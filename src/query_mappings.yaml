@@ -1,0 +1,13 @@
+- api_endpoint: /myapi
+  columns:
+    id: myapi_id
+    name: myapi_name
+    created_at: myapi_created_at
+  query: SELECT * FROM mytable;
+
+- api_endpoint: /myapi2
+  columns:
+    id: myapi2_id
+    name: myapi2_name
+    created_at: myapi2_created_at
+  query: SELECT id, name, created_at FROM othertable;
