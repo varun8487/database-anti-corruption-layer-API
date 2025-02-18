@@ -1,0 +1,42 @@
+name: GITOPS Helm Deploy
+
+on:
+  push:
+    paths:
+      - 'helm/**'
+    branches:
+      - main  # or your default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Kubernetes tools
+        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        with:
+          kubectl: '1.27.3'
+          helm: '3.12.3'
+
+      - name: Configure Kubernetes context
+        uses: azure/k8s-set-context@v3
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Lint and update Helm chart dependencies
+        run: |
+          for chart in registry postgres anti-corruption-api; do
+            echo "Linting chart: $chart"
+            helm lint ./helm/$chart
+            echo "Updating dependencies for chart: $chart"
+            helm dependency update ./helm/$chart
+          done
+
+      - name: Deploy Helm charts
+        run: |
+          for chart in registry postgres anti-corruption-api; do
+            echo "Deploying chart: $chart"
+            helm upgrade $chart ./helm/$chart --install --wait
+          done
